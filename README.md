@@ -1,5 +1,5 @@
 # Biomarkers of NSCLC project
-This repository contains the code files and data used for a gene expression analysis project based on the GEO dataset. The project involves processing gene expression data and performing various analyses. Below, we describe the main components of this project.
+This repository contains the code files and data used for finding biomarkers linked to Non small cell lung cancer based on the GEO dataset. The project involves processing gene expression data and performing various analyses. Below, we describe the main components of this project.
 
 ## Project Overview
 In this project, we analyze gene expression data from the GEO dataset. The goal is to gain insights into gene expression patterns in different tumor types. We perform data preprocessing, create relevant CSV files, and visualize gene expression patterns.
