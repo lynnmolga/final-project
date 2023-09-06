@@ -1,0 +1,161 @@
+```{r}
+library(ggplot2)
+library(dplyr)
+library(FactoMineR)  # For PCA
+library(ggrepel)  # For geom_text_repel
+
+# Read the CSV file
+data <- read.csv("C://Users//valle//PycharmProjects//pythonProject11//combined_output.csv", sep=",")
+
+# Select relevant columns
+expression_data <- data[, c("gene", "expression", "mean", "std", "z_score", "tumor")]
+
+# Perform PCA
+pca_result <- PCA(expression_data[, c("expression", "mean", "std", "z_score")], scale.unit = TRUE)
+
+# Add PCA results to the data frame
+expression_data <- expression_data %>% 
+  mutate(PC1 = pca_result$ind$coord[, 1], PC2 = pca_result$ind$coord[, 2])
+
+# Plot the data with PCA components colored by gene and labeled by tumor type
+ggplot(expression_data, aes(x=PC1, y=PC2, color=gene, shape=tumor, label=gene)) +
+  geom_point() +
+  geom_text_repel(nudge_x = 0.2, nudge_y = 0.2) +
+  labs(title="PCA with Gene Colors and Tumor Labels")
+
+```
+
+```{r}
+expression_data2 <- na.omit(expression_data)
+
+# Perform PCA
+pca_result <- prcomp(expression_data2[, c("expression", "mean", "std", "z_score")], scale = TRUE)
+
+# Extract PCA scores
+pca_scores <- pca_result$x
+
+# Add PCA scores to the data frame
+expression_data <- cbind(expression_data2, pca_scores)
+
+# Plot the data with PCA components colored by gene and labeled by tumor type
+library(ggplot2)
+library(ggrepel)  # For geom_text_repel
+
+ggplot(expression_data2, aes(x=PC1, y=PC2, color=gene, shape=tumor, label=gene)) +
+  geom_point() +
+  geom_text_repel(nudge_x = 0.2, nudge_y = 0.2) +
+  labs(title="PCA with Gene Colors and Tumor Labels")
+
+```
+```{r}
+library(gplots)
+
+# Select relevant columns for all genes
+selected_genes <- unique(data$gene)
+selected_data <- data[data$gene %in% selected_genes, c("expression", "gene")]
+
+# Create a matrix of gene expressions
+gene_matrix <- reshape2::dcast(selected_data, formula = expression ~ gene)
+
+# Calculate the correlation matrix
+correlation_matrix <- cor(gene_matrix[, -1])  # Exclude the first column (expression values)
+
+# Adjust margins and dimensions for the heatmap
+par(mar = c(5, 4, 4, 2) + 0.1)  # Adjust margins as needed
+pdf("correlation_heatmap.pdf", width = 10, height = 10)  # Adjust dimensions as needed
+
+# Create a heatmap of the correlation matrix
+heatmap.2(correlation_matrix,
+          trace = "none",
+          col = colorRampPalette(c("blue", "white", "red"))(100),
+          key = TRUE,
+          keysize = 1.5,
+          cexRow = 0.5,
+          cexCol = 0.5,
+          margins = c(8, 8),
+          main = "Correlation Heatmap of Gene Expressions")
+dev.off()  # Close the PDF device
+```
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(factoextra)
+library(caret)
+
+data <- read.csv("C:\\Users\\valle\\PycharmProjects\\pythonProject11\\genes_per_patient1.csv", sep=",", header=TRUE)
+
+# Perform PCA on your data (assuming columns 1 to 18 are the features)
+prcomp_data <- prcomp(data[, 1:18])
+
+# Create a data frame for PCA results
+pca_data <- data.frame(
+  PC1 = prcomp_data$x[, 1],
+  PC2 = prcomp_data$x[, 2],
+  label = data$tumor.type,
+  classification = data$tumor.type
+)
+pdf("pca.pdf", width = 10, height = 10)
+# Create the scatter plot
+ggplot(pca_data, aes(x = PC1, y = PC2, label = label, col = classification)) +
+  geom_point() +
+  geom_text_repel(cex = 2.5, max.overlaps = 100)
+dev.off()  # Close the PDF device
+```
+```{r}
+install.packages("FactoMineR")
+library(FactoMineR)
+library(ggplot2)
+library(ggrepel)
+# Select the columns that you want to include in the PCA
+features <- data[, 1:18]
+
+# Perform PCA
+pca_result <- PCA(features, scale.unit = TRUE)
+
+# Extract the principal component scores
+pca_scores <- as.data.frame(pca_result$ind$coord)
+
+# Add labels and classification information
+pca_scores$label <- data$tumor.type
+pca_scores$classification <- data$tumor.type
+
+# Create a scatter plot
+ggplot(pca_scores, aes(x = Dim.1, y = Dim.2, label = label, col = classification)) +
+  geom_point() +
+  geom_text_repel(cex = 2.5)
+
+
+```
+```{r}
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+library(umap)
+library(Rtsne)
+data <- read.csv("C:\\Users\\valle\\PycharmProjects\\pythonProject11\\genes_per_patient1.csv", sep=",", header=TRUE)
+# Select the columns that you want to include in the UMAP
+features <- data[, 1:18]
+
+# Perform UMAP
+umap_result <- umap(features, n_neighbors = 15, n_components = 2, metric = "euclidean")
+
+# Create a data frame for UMAP results
+umap_df <- data.frame(
+  UMAP1 = umap_result$layout[, 1],
+  UMAP2 = umap_result$layout[, 2],
+  label = data$tumor.type,
+  classification = data$tumor.type
+)
+
+# Create the scatter plot
+library(ggplot2)
+library(ggrepel)
+
+ggplot(umap_df, aes(x = UMAP1, y = UMAP2, label = label, col = classification)) +
+  geom_point() +
+  geom_text_repel(cex = 2.5)
+
+```
+
