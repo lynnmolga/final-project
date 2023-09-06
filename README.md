@@ -1,4 +1,4 @@
-# Gene Expression Analysis Project
+# Biomarkers of NSCLC project
 This repository contains the code files and data used for a gene expression analysis project based on the GEO dataset. The project involves processing gene expression data and performing various analyses. Below, we describe the main components of this project.
 
 ## Project Overview
