@@ -14,7 +14,7 @@ In this project, we analyze gene expression data from the GEO dataset. The goal 
       a. **combined_output.csv**: This CSV file holds information about gene expression, tumor profiles, mean expression, standard deviation, and z-scores for specific genes and samples.
 
       b. **gene_per_patient.csv**: In this CSV file each row represents a unique patient and each column a specific gene. The values in this matrix are binary,
-     indicating the presence (1) or absence (0) of each gene's expression in the patient's sample.
+     indicating the presence (1) or absence (0) of each gene's expression in the patient's sample and the last column holds the tumor type of the patient
 
 * plot.py- The plot.py script is designed to create box plots that visualize gene expression patterns for different tumor types based on the data in the 'combined_output.csv' file.
 * tsne.py- The tsne.py script is responsible for performing dimensionality reduction and clustering on gene expression data and generating visualizations to explore the relationships between genes and tumor types.
